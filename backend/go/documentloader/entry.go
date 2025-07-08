@@ -26,6 +26,19 @@ const (
 	EncodingISO88595
 )
 
+var encodingMap = map[string]Encoding{
+	"utf-8":        EncodingUTF8,
+	"utf-16le":     EncodingUTF16LE,
+	"utf-16be":     EncodingUTF16BE,
+	"gbk":          EncodingGBK,
+	"big5":         EncodingBIG5,
+	"iso-8859-1":   EncodingISO88591,
+	"windows-1251": EncodingWindows1251,
+	"windows-1252": EncodingWindows1252,
+	"koi8-r":       EncodingKOI8R,
+	"iso-8859-5":   EncodingISO88595,
+}
+
 func (e Encoding) Value() string {
 	switch e {
 	case EncodingAuto:
