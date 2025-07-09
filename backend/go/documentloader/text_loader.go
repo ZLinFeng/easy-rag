@@ -1,7 +1,6 @@
 package documentloader
 
 import (
-	""
 	"errors"
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
