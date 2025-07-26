@@ -6,7 +6,7 @@ import (
 )
 
 func Test_Tokenizer(t *testing.T) {
-	l := &Lexer{input: "$.name.lastName[0].age.children[*]"}
+	l := &JsonLexer{input: "$.*.age.children[12]"}
 	for {
 		tok, err := l.NextToken()
 		if err != nil {
@@ -16,5 +16,14 @@ func Test_Tokenizer(t *testing.T) {
 			break
 		}
 		fmt.Printf("%+v\n", tok)
+	}
+}
+
+func TestJsonParser_Parse(t *testing.T) {
+	p := NewParser("$.*.age.children[12]")
+	if ast, err := p.Parse(); err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(ast)
 	}
 }
