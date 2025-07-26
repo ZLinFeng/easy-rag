@@ -15,6 +15,7 @@ type JsonToken struct {
 	EndPos   int
 }
 
+// JsonLexer 词法解析器
 type JsonLexer struct {
 	input        string
 	position     int // 当前位置
@@ -35,6 +36,33 @@ const (
 	Lbracket
 	Rbracket
 )
+
+func (t JsonTokenType) getName() string {
+	switch t {
+	case Root:
+		return "Root"
+	case RecursiveDescent:
+		return "RecursiveDescent"
+	case Identifier:
+		return "Identifier"
+	case Number:
+		return "Number"
+	case Wildcard:
+		return "Wildcard"
+	case Colon:
+		return "Colon"
+	case Comma:
+		return "Comma"
+	case Dot:
+		return "Dot"
+	case Lbracket:
+		return "Lbracket"
+	case Rbracket:
+		return "Rbracket"
+	default:
+		return "Unknown"
+	}
+}
 
 func (l *JsonLexer) readChar() {
 	if l.readPosition >= len(l.input) {
@@ -161,15 +189,12 @@ func (n *JsonAstNode) String() string {
 		return ""
 	}
 
-	// 构建当前节点的字符串表示
 	nodeStr := fmt.Sprintf("%s(%s)", n.getTypeName(), n.Value)
 
-	// 如果没有子节点，则直接返回当前节点信息
 	if n.Child == nil {
 		return nodeStr
 	}
 
-	// 递归处理子节点
 	return fmt.Sprintf("%s -> %s", nodeStr, n.Child.String())
 }
 
@@ -195,6 +220,7 @@ func (n *JsonAstNode) getTypeName() string {
 	}
 }
 
+// JsonParser 语法解析器
 type JsonParser struct {
 	lexer        *JsonLexer
 	currentToken *JsonToken
@@ -277,7 +303,7 @@ func (jp *JsonParser) parseRest() (*JsonAstNode, error) {
 			return nil, err
 		}
 		if jp.currentToken.Type != EOF && jp.currentToken.Type != Dot && jp.currentToken.Type != Lbracket && jp.currentToken.Type != RecursiveDescent {
-			return nil, fmt.Errorf("expected Lbracket or EOF or Dot or RecursiveDescent after Array, got %v", jp.currentToken.Type)
+			return nil, fmt.Errorf("expected Lbracket or EOF or Dot or RecursiveDescent after Array, got %v", jp.currentToken.Type.getName())
 		}
 	case Wildcard:
 		node = &JsonAstNode{
